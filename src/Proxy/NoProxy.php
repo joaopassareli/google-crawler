@@ -15,7 +15,7 @@ use Psr\Http\Message\ResponseInterface;
  */
 class NoProxy implements GoogleProxyInterface
 {
-    /** {@inheritdoc} */
+    /** {@ } */
     public function getHttpResponse(string $url): ResponseInterface
     {
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
@@ -26,19 +26,17 @@ class NoProxy implements GoogleProxyInterface
     }
 
     /** {@inheritdoc} */
-    public function parseUrl(string $url): string
+    public function parseUrl(string $googleUrl): string
     {
-        // Separates the url parts
-        $link = parse_url($url);
-        // Parses the parameters of the url query
-        parse_str($link['query'], $link);
+        $urlParts = parse_url($googleUrl);
+        parse_str($urlParts['query'], $queryStringParams);
 
-        $url = filter_var($link['q'], FILTER_VALIDATE_URL);
-        // If this is not a valid URL, so the result is (probably) an image, news or video suggestion
-        if (!$url) {
+        $resultUrl = filter_var($queryStringParams['q'], FILTER_VALIDATE_URL);
+        
+        if (!$resultUrl) {
             throw new InvalidResultException();
         }
 
-        return $url;
+        return $resultUrl;
     }
 }
