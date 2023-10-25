@@ -13,7 +13,6 @@ class NoProxyGoogleHttpClient implements GoogleHttpClient
         if (!filter_var($url, FILTER_VALIDATE_URL)) {
             throw new InvalidUrlException("Invalid Google URL: $url");
         }
-
         return (new Client())->request('GET', $url);
     }
 }
